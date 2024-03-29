@@ -16,6 +16,10 @@ public class Player {
         this.team = team;
     }
 
+    public double score() {
+        return board.score(this.team);
+    }
+
     public void move(Point departure, Point destination) {
         Piece currentPiece = board.get(departure);
         Piece targetPiece = board.get(destination);

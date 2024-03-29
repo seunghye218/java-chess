@@ -23,6 +23,11 @@ public class ChessGame {
         player.move(departure, destination);
     }
 
+    public double currentTurnPlayerScore() {
+        Player player = this.players.get(turn);
+        return player.score();
+    }
+
     public void turnOver() {
         this.turn = turn.opponent();
     }
