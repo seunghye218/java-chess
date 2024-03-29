@@ -40,6 +40,8 @@ public abstract class Piece {
 
     public abstract boolean isMovable(Point currentPoint, Point nextPoint, Piece target);
 
+    public abstract double score();
+
     public boolean isSameTeam(Team team) {
         return this.team == team;
     }

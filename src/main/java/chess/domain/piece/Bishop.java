@@ -22,4 +22,9 @@ public final class Bishop extends Piece {
     public boolean isMovable(Point currentPoint, Point nextPoint, Piece target) {
         return currentPoint.isSlopeOneDiagonal(nextPoint);
     }
+
+    @Override
+    public double score() {
+        return 3;
+    }
 }

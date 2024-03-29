@@ -22,4 +22,9 @@ public final class King extends Piece {
     public boolean isMovable(Point currentPoint, Point nextPoint, Piece target) {
         return currentPoint.isAround(nextPoint);
     }
+
+    @Override
+    public double score() {
+        return 0;
+    }
 }

@@ -22,4 +22,9 @@ public final class Knight extends Piece {
     public boolean isMovable(Point currentPoint, Point nextPoint, Piece target) {
         return Math.abs(currentPoint.multiplyAxis(nextPoint)) == 2;
     }
+
+    @Override
+    public double score() {
+        return 2.5;
+    }
 }

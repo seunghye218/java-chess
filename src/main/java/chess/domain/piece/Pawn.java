@@ -9,8 +9,9 @@ import java.util.Optional;
 
 public final class Pawn extends Piece {
 
-    private static final Map<Team, Pawn> POOL = Map.of(Team.WHITE, new Pawn(Team.WHITE), Team.BLACK,
-            new Pawn(Team.BLACK));
+    private static final Map<Team, Pawn> POOL = Map.of(
+            Team.WHITE, new Pawn(Team.WHITE),
+            Team.BLACK, new Pawn(Team.BLACK));
 
     private Pawn(Team team) {
         super(team);
@@ -26,6 +27,11 @@ public final class Pawn extends Piece {
             return false;
         }
         return canAttack(currentPoint, nextPoint, target) || canForward(currentPoint, nextPoint, target);
+    }
+
+    @Override
+    public double score() {
+        return 1;
     }
 
     private boolean invalidForwardDirection(Point currentPoint, Point nextPoint) {

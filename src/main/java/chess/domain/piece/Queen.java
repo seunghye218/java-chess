@@ -22,4 +22,9 @@ public final class Queen extends Piece {
     public boolean isMovable(Point currentPoint, Point nextPoint, Piece target) {
         return currentPoint.isStraight(nextPoint) || currentPoint.isSlopeOneDiagonal(nextPoint);
     }
+
+    @Override
+    public double score() {
+        return 9;
+    }
 }

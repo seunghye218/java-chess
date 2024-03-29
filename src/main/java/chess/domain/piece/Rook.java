@@ -22,4 +22,9 @@ public final class Rook extends Piece {
     public boolean isMovable(Point currentPoint, Point nextPoint, Piece target) {
         return currentPoint.isStraight(nextPoint);
     }
+
+    @Override
+    public double score() {
+        return 5;
+    }
 }
