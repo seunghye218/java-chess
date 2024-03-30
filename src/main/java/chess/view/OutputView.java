@@ -1,14 +1,17 @@
 package chess.view;
 
+import chess.domain.piece.Piece;
+import chess.domain.piece.Team;
 import chess.domain.point.File;
 import chess.domain.point.Point;
 import chess.domain.point.Rank;
-import chess.domain.piece.Piece;
 import java.util.Map;
 
 public class OutputView {
 
     private static final String ERROR_SUFFIX = "[ERROR]";
+    private static final String TEAM_WHITE = "White";
+    private static final String TEAM_BLACK = "Black";
 
     public void printBoard(Map<Point, Piece> board) {
         StringBuilder builder = new StringBuilder();
@@ -38,5 +41,47 @@ public class OutputView {
 
     public void printGameEnd() {
         System.out.println("게임이 종료되었습니다.");
+    }
+
+    public void printStatus(Map<Team, Double> scores) {
+        StringBuilder builder = new StringBuilder();
+
+        double whiteScore = scores.get(Team.WHITE);
+        double blackScore = scores.get(Team.BLACK);
+        builder.append(String.format("%s 진영 점수: ", TEAM_WHITE))
+                .append(whiteScore)
+                .append(System.lineSeparator())
+                .append(String.format("%s 진영 점수: ", TEAM_BLACK))
+                .append(blackScore)
+                .append(System.lineSeparator());
+
+        if (whiteScore == blackScore) {
+            builder.append("동점 입니다.");
+        }
+        if (whiteScore > blackScore) {
+            builder.append(String.format("%s 진영이 이기고 있습니다.", TEAM_WHITE));
+        }
+        if (whiteScore < blackScore) {
+            builder.append(String.format("%s 진영이 이기고 있습니다.", TEAM_BLACK));
+        }
+
+        System.out.println(builder.append(System.lineSeparator()));
+    }
+
+    public void printWinner(Team winner) {
+        StringBuilder builder = new StringBuilder("체크메이트!");
+
+        if (Team.WHITE.equals(winner)) {
+            builder.append(String.format("%s 진영이 이겼습니다.", TEAM_WHITE));
+        }
+        if (Team.BLACK.equals(winner)) {
+            builder.append(String.format("%s 진영이 이겼습니다.", TEAM_BLACK));
+        }
+        if (Team.EMPTY.equals(winner)) {
+            builder.append("아직 승자가 없습니다.");
+        }
+        builder.append("%n게임을 종료합니다.");
+
+        System.out.println(builder);
     }
 }
