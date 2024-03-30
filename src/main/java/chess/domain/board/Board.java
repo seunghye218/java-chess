@@ -18,15 +18,15 @@ public class Board {
         this.board = board;
     }
 
-    public void move(Point currentPoint, Point destination) {
+    public Piece move(Point currentPoint, Point destination) {
         Piece currentPiece = board.get(currentPoint);
 
-        movePiece(currentPoint, destination, currentPiece);
+        return movePiece(currentPoint, destination, currentPiece);
     }
 
-    private void movePiece(Point currentPoint, Point destination, Piece currentPiece) {
+    private Piece movePiece(Point currentPoint, Point destination, Piece currentPiece) {
         board.put(currentPoint, Piece.empty());
-        board.put(destination, currentPiece);
+        return board.put(destination, currentPiece);
     }
 
     public boolean isEmpty(Point nextPoint) {
