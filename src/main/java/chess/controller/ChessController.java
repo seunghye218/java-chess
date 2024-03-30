@@ -12,6 +12,7 @@ import chess.view.OutputView;
 public class ChessController {
 
     private static final String COMMAND_END = "end";
+    private static final String COMMAND_STATUS = "status";
     private static final int DEPARTURE_INDEX = 1;
     private static final int DESTINATION_INDEX = 2;
     private static final int FILE_INDEX = 0;
@@ -54,7 +55,15 @@ public class ChessController {
                     outputView.printGameEnd();
                     return;
                 }
+                if (COMMAND_STATUS.equals(readCommand)) {
+                    outputView.printStatus(game.playerScores());
+                    continue;
+                }
                 pieceMove(readCommand, game);
+                if (game.isGameOver()) {
+                    outputView.printWinner(game.getWinner());
+                    break;
+                }
             } catch (IllegalStateException e) {
                 outputView.printErrorMessage(e.getMessage());
                 return;
