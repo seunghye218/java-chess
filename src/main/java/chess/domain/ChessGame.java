@@ -52,4 +52,8 @@ public class ChessGame {
     public Team getWinner() {
         return winner;
     }
+
+    public Team currentTurn() {
+        return turn;
+    }
 }
