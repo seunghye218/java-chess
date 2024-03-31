@@ -71,6 +71,7 @@ public class OutputView {
     public void printWinner(Team winner) {
         StringBuilder builder = new StringBuilder("체크메이트!");
 
+        builder.append(System.lineSeparator());
         if (Team.WHITE.equals(winner)) {
             builder.append(String.format("%s 진영이 이겼습니다.", TEAM_WHITE));
         }
@@ -80,7 +81,8 @@ public class OutputView {
         if (Team.EMPTY.equals(winner)) {
             builder.append("아직 승자가 없습니다.");
         }
-        builder.append("%n게임을 종료합니다.");
+        builder.append(System.lineSeparator());
+        builder.append("게임을 종료합니다.");
 
         System.out.println(builder);
     }
