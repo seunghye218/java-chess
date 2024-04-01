@@ -1,6 +1,7 @@
 package chess.service;
 
 import chess.dao.MovementDao;
+import chess.domain.piece.Team;
 import chess.dto.MovementDto;
 import java.util.List;
 
@@ -12,8 +13,8 @@ public class GameService {
         this.movementDao = new MovementDao();
     }
 
-    public void saveMovement(String turn, String source, String target) {
-        movementDao.addMovement(new MovementDto(turn, source, target));
+    public void saveMovement(Team team, String source, String target) {
+        movementDao.addMovement(new MovementDto(team.name(), source, target));
     }
 
     public List<MovementDto> loadMovements() {

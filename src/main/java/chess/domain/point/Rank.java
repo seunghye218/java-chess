@@ -57,4 +57,8 @@ public enum Rank {
     public static int minValue() {
         return FIRST.rank;
     }
+
+    public int getRank() {
+        return rank;
+    }
 }

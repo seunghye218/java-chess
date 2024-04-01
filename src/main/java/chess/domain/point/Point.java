@@ -27,7 +27,16 @@ public class Point {
     }
 
     public static Point of(File file, Rank rank) {
-        return POOL.get(toKey(file, rank));
+        return POOL.computeIfAbsent(toKey(file, rank), ignore -> {
+            throw new IllegalArgumentException("존재하지 않는 Point 입니다.");
+        });
+    }
+
+    public static Point of(String pointKey) {
+        String key = pointKey.toUpperCase();
+        return POOL.computeIfAbsent(key, ignore -> {
+            throw new IllegalArgumentException("존재하지 않는 Point 입니다.");
+        });
     }
 
     public boolean isSlopeOneDiagonal(Point point) {
@@ -98,6 +107,6 @@ public class Point {
     }
 
     private static String toKey(File file, Rank rank) {
-        return file.name() + rank.name();
+        return file.name() + rank.getRank();
     }
 }

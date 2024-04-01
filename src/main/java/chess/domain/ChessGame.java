@@ -10,11 +10,13 @@ import java.util.Map;
 
 public class ChessGame {
 
+    private final Board board;
     private final Map<Team, Player> players;
     private Team turn;
     private Team winner;
 
     public ChessGame(Board board, Team turn) {
+        this.board = board;
         this.players = Map.of(
                 Team.WHITE, new Player(Team.WHITE, board),
                 Team.BLACK, new Player(Team.BLACK, board));
@@ -55,5 +57,9 @@ public class ChessGame {
 
     public Team currentTurn() {
         return turn;
+    }
+
+    public Board getBoard() {
+        return board;
     }
 }

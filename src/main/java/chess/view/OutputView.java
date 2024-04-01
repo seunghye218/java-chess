@@ -1,5 +1,6 @@
 package chess.view;
 
+import chess.domain.board.Board;
 import chess.domain.piece.Piece;
 import chess.domain.piece.Team;
 import chess.domain.point.File;
@@ -13,7 +14,7 @@ public class OutputView {
     private static final String TEAM_WHITE = "White";
     private static final String TEAM_BLACK = "Black";
 
-    public void printBoard(Map<Point, Piece> board) {
+    public void printBoard(Board board) {
         StringBuilder builder = new StringBuilder();
 
         for (int rank = Rank.maxValue(); rank >= Rank.minValue(); rank--) {
