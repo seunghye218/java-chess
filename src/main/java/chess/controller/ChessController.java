@@ -51,7 +51,13 @@ public class ChessController {
     }
 
     private void runGame() {
-        List<MovementDto> movementDtos = gameService.loadMovements();
+        List<MovementDto> movementDtos;
+        try {
+            movementDtos = gameService.loadMovements();
+        } catch (IllegalStateException e) {
+            outputView.printErrorMessage(e.getMessage());
+            return;
+        }
         Board board = BoardFactory.createChessBoard(movementDtos);
         Team turn = getTurn(movementDtos);
         ChessGame game = new ChessGame(board, turn);

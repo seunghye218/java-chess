@@ -14,14 +14,13 @@ public class MovementDao {
     private static final String OPTION = "?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul&useUnicode=true&characterEncoding=utf8";
     private static final String USERNAME = "root";
     private static final String PASSWORD = "root";
+    private static final String DB_ERROR_MESSAGE = "애플리케이션을 종료합니다. 관리자에 문의를 주세요.";
 
     private Connection getConnection() {
         try {
             return DriverManager.getConnection("jdbc:mysql://" + SERVER + "/" + DATABASE + OPTION, USERNAME, PASSWORD);
         } catch (final SQLException e) {
-            System.err.println("DB 연결 오류:" + e.getMessage());
-            e.printStackTrace();
-            return null;
+            throw new IllegalStateException("DB 연결 오류가 발생하였습니다. " + DB_ERROR_MESSAGE);
         }
     }
 
@@ -33,7 +32,7 @@ public class MovementDao {
             statement.setString(3, movementDto.target());
             statement.executeUpdate();
         } catch (SQLException e) {
-            throw new IllegalStateException("게임을 진행할 수 없는 상태입니다. 게임을 종료합니다.");
+            throw new IllegalStateException("기보를 저장할 수 없습니다. " + DB_ERROR_MESSAGE);
         }
     }
 
@@ -50,7 +49,7 @@ public class MovementDao {
             }
             return movementDtos;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new IllegalStateException("기보를 불러올 수 없습니다. " + DB_ERROR_MESSAGE);
         }
     }
 
@@ -59,7 +58,7 @@ public class MovementDao {
             var statement = connection.prepareStatement("DELETE FROM movement");
             statement.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new IllegalStateException("게임을 초기화를 실패했습니다. " + DB_ERROR_MESSAGE);
         }
     }
 }
