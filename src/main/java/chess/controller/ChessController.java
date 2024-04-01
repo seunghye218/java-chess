@@ -7,9 +7,11 @@ import chess.domain.piece.Team;
 import chess.domain.point.File;
 import chess.domain.point.Point;
 import chess.domain.point.Rank;
+import chess.dto.MovementDto;
 import chess.service.GameService;
 import chess.view.InputView;
 import chess.view.OutputView;
+import java.util.List;
 
 public class ChessController {
 
@@ -49,8 +51,10 @@ public class ChessController {
     }
 
     private void runGame() {
-        Board board = BoardFactory.createInitialChessBoard();
-        ChessGame game = new ChessGame(board);
+        List<MovementDto> movementDtos = gameService.loadMovements();
+        Board board = BoardFactory.createChessBoard(movementDtos);
+        Team turn = getTurn(movementDtos);
+        ChessGame game = new ChessGame(board, turn);
         while (true) {
             try {
                 outputView.printBoard(board.getBoard());
@@ -81,6 +85,20 @@ public class ChessController {
         }
     }
 
+    private Team getTurn(List<MovementDto> movementDtos) {
+        if (movementDtos.isEmpty()) {
+            return Team.WHITE;
+        }
+        String lastTurn = movementDtos.get(movementDtos.size() - 1).turn();
+        Team turn;
+        if ("white".equals(lastTurn)) {
+            turn = Team.BLACK;
+        } else {
+            turn = Team.WHITE;
+        }
+        return turn;
+    }
+
     private void pieceMove(String readCommand, ChessGame game) {
         String[] splitCommands = readCommand.split(" ");
         String source = splitCommands[DEPARTURE_INDEX];
@@ -94,9 +112,9 @@ public class ChessController {
             throw new IllegalArgumentException("잘못된 위치를 입력하였습니다. 입력값 : " + readCommand);
         }
         game.currentTurnPlayerMove(departure, destination);
-        game.turnOver();
         String turn = currentTurn(game);
         gameService.saveMovement(turn, source, target);
+        game.turnOver();
     }
 
     private String currentTurn(ChessGame game) {
@@ -109,6 +127,7 @@ public class ChessController {
         return turn;
     }
 
+    // TODO: 객체로 만들어 보드팩토리에서도 재사용
     private Point parsePoint(String splitCommand) {
         File file = File.of(splitCommand.charAt(FILE_INDEX));
         Rank rank = Rank.of(Integer.parseInt(String.valueOf(splitCommand.charAt(RANK_INDEX))));

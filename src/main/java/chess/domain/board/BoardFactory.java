@@ -5,10 +5,15 @@ import chess.domain.piece.Team;
 import chess.domain.point.File;
 import chess.domain.point.Point;
 import chess.domain.point.Rank;
+import chess.dto.MovementDto;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class BoardFactory {
+
+    private static final int FILE_INDEX = 0;
+    private static final int RANK_INDEX = 1;
 
     public static Board createInitialChessBoard() {
         Map<Point, Piece> board = new HashMap<>();
@@ -85,5 +90,22 @@ public class BoardFactory {
             line.put(Point.of(File.of(c), Rank.of(rank)), Piece.empty());
         }
         return line;
+    }
+
+    public static Board createChessBoard(List<MovementDto> movementDtos) {
+        Board board = createInitialChessBoard();
+
+        if (movementDtos.isEmpty()) {
+            return board;
+        }
+
+        for (MovementDto movementDto : movementDtos) {
+            Point source = Point.of(File.of(movementDto.source().charAt(FILE_INDEX)),
+                    Rank.of(Integer.parseInt(String.valueOf(movementDto.source().charAt(RANK_INDEX)))));
+            Point target = Point.of(File.of(movementDto.target().charAt(FILE_INDEX)),
+                    Rank.of(Integer.parseInt(String.valueOf(movementDto.target().charAt(RANK_INDEX)))));
+            board.move(source, target);
+        }
+        return board;
     }
 }

@@ -14,11 +14,11 @@ public class ChessGame {
     private Team turn;
     private Team winner;
 
-    public ChessGame(Board board) {
+    public ChessGame(Board board, Team turn) {
         this.players = Map.of(
                 Team.WHITE, new Player(Team.WHITE, board),
                 Team.BLACK, new Player(Team.BLACK, board));
-        this.turn = Team.WHITE;
+        this.turn = turn;
         this.winner = Team.EMPTY;
     }
 
