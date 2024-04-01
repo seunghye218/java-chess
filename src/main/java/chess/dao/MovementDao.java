@@ -4,6 +4,8 @@ import chess.dto.MovementDto;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MovementDao {
 
@@ -32,6 +34,23 @@ public class MovementDao {
             statement.executeUpdate();
         } catch (SQLException e) {
             throw new IllegalStateException("게임을 진행할 수 없는 상태입니다. 게임을 종료합니다.");
+        }
+    }
+
+    public List<MovementDto> findAll() {
+        try (var connection = getConnection()) {
+            var statement = connection.prepareStatement("SELECT * FROM movement");
+            var resultSet = statement.executeQuery();
+            List<MovementDto> movementDtos = new ArrayList<>();
+            while (resultSet.next()) {
+                movementDtos.add(new MovementDto(
+                        resultSet.getString("turn"),
+                        resultSet.getString("source"),
+                        resultSet.getString("target")));
+            }
+            return movementDtos;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 
