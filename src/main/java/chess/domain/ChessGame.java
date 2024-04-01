@@ -5,21 +5,23 @@ import chess.domain.piece.Piece;
 import chess.domain.piece.Team;
 import chess.domain.player.Player;
 import chess.domain.point.Point;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
 
 public class ChessGame {
 
     private final Board board;
-    private final Map<Team, Player> players;
+    private final EnumMap<Team, Player> players;
     private Team turn;
     private Team winner;
 
     public ChessGame(Board board, Team turn) {
+        this.players = new EnumMap<>(Team.class);
+        this.players.put(Team.WHITE, new Player(Team.WHITE, board));
+        this.players.put(Team.BLACK, new Player(Team.BLACK, board));
+
         this.board = board;
-        this.players = Map.of(
-                Team.WHITE, new Player(Team.WHITE, board),
-                Team.BLACK, new Player(Team.BLACK, board));
         this.turn = turn;
         this.winner = Team.EMPTY;
     }

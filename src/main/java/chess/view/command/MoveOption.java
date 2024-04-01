@@ -1,6 +1,5 @@
 package chess.view.command;
 
-import chess.domain.point.File;
 import java.util.List;
 
 public record MoveOption(String source, String target) {

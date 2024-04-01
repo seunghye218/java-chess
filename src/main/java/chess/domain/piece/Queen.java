@@ -1,14 +1,17 @@
 package chess.domain.piece;
 
 import chess.domain.point.Point;
-import java.util.Map;
+import java.util.EnumMap;
 
 public final class Queen extends Piece {
 
-    private static final Map<Team, Queen> POOL = Map.of(
-            Team.WHITE, new Queen(Team.WHITE),
-            Team.BLACK, new Queen(Team.BLACK)
-    );
+    private static final EnumMap<Team, Queen> POOL;
+
+    static {
+        POOL = new EnumMap<>(Team.class);
+        POOL.put(Team.WHITE, new Queen(Team.WHITE));
+        POOL.put(Team.BLACK, new Queen(Team.BLACK));
+    }
 
     private Queen(Team team) {
         super(team);

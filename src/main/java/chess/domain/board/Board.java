@@ -38,7 +38,9 @@ public class Board {
     }
 
     public Piece get(Point point) {
-        return board.get(point);
+        return board.computeIfAbsent(point, ignore -> {
+            throw new IllegalArgumentException("해당 위치에 기물이 없습니다.");
+        });
     }
 
     public double score(Team team) {

@@ -1,14 +1,17 @@
 package chess.domain.piece;
 
 import chess.domain.point.Point;
-import java.util.Map;
+import java.util.EnumMap;
 
 public final class Bishop extends Piece {
 
-    private static final Map<Team, Bishop> POOL = Map.of(
-            Team.WHITE, new Bishop(Team.WHITE),
-            Team.BLACK, new Bishop(Team.BLACK)
-    );
+    private static final EnumMap<Team, Bishop> POOL;
+
+    static {
+        POOL = new EnumMap<>(Team.class);
+        POOL.put(Team.WHITE, new Bishop(Team.WHITE));
+        POOL.put(Team.BLACK, new Bishop(Team.BLACK));
+    }
 
     private Bishop(Team team) {
         super(team);
