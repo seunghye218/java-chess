@@ -9,8 +9,8 @@ public class GameService {
 
     private final MovementDao movementDao;
 
-    public GameService() {
-        this.movementDao = new MovementDao();
+    public GameService(MovementDao movementDao) {
+        this.movementDao = movementDao;
     }
 
     public void saveMovement(Team team, String source, String target) {

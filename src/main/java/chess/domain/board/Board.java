@@ -21,10 +21,6 @@ public class Board {
     public Piece move(Point currentPoint, Point destination) {
         Piece currentPiece = board.get(currentPoint);
 
-        return movePiece(currentPoint, destination, currentPiece);
-    }
-
-    private Piece movePiece(Point currentPoint, Point destination, Piece currentPiece) {
         board.put(currentPoint, Piece.empty());
         return board.put(destination, currentPiece);
     }
@@ -73,9 +69,8 @@ public class Board {
     }
 
     private double sameColumnPawnsDeduction(Team team) {
-        return Arrays.stream(File.values())
-                .mapToInt(file -> countPawnIfSameColumnExistPawns(team, file))
-                .sum() * SAME_COLUMN_PAWNS_DEDUCATION;
+        return Arrays.stream(File.values()).mapToInt(file -> countPawnIfSameColumnExistPawns(team, file)).sum()
+                * SAME_COLUMN_PAWNS_DEDUCATION;
     }
 
     private int countPawnIfSameColumnExistPawns(Team team, File file) {
