@@ -99,18 +99,13 @@ public class ChessController {
 
     private void pieceMoveAndSave(final Command command, ChessGame game) {
         MoveOption moveOption = new MoveOption(command.options());
-        try {
-            String source = moveOption.source();
-            String target = moveOption.target();
+        String source = moveOption.source();
+        String target = moveOption.target();
 
-            game.currentTurnPlayerMove(Point.of(source), Point.of(target));
+        game.currentTurnPlayerMove(Point.of(source), Point.of(target));
 
-            gameService.saveMovement(game.currentTurn(), moveOption.source(), moveOption.target());
+        gameService.saveMovement(game.currentTurn(), moveOption.source(), moveOption.target());
 
-            game.turnOver();
-        } catch (IndexOutOfBoundsException e) {
-            throw new IllegalArgumentException(
-                    String.format("잘못된 위치를 입력하였습니다. 입력값 : %s %s", moveOption.source(), moveOption.target()));
-        }
+        game.turnOver();
     }
 }
