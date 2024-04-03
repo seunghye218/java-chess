@@ -9,11 +9,11 @@ import java.util.List;
 
 public class MovementDao {
 
-    private static final String SERVER = "localhost:3306";
+    private static final String SERVER = "localhost:13306";
     private static final String DATABASE = "chess";
     private static final String OPTION = "?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul&useUnicode=true&characterEncoding=utf8";
-    private static final String USERNAME = "root";
-    private static final String PASSWORD = "root";
+    private static final String USERNAME = "mark";
+    private static final String PASSWORD = "mark";
     private static final String DB_ERROR_MESSAGE = "애플리케이션을 종료합니다. 관리자에 문의를 주세요.";
 
     private Connection getConnection() {
