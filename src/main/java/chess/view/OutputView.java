@@ -11,8 +11,14 @@ import chess.domain.point.Rank;
 public class OutputView {
 
     private static final String ERROR_SUFFIX = "[ERROR]";
-    private static final String TEAM_WHITE = "White";
-    private static final String TEAM_BLACK = "Black";
+
+    public void printGameStart() {
+        System.out.println("""
+                > 체스 게임을 시작합니다.
+                > 게임 시작 : start
+                > 게임 종료 : end
+                > 게임 이동 : move source위치 target위치 - 예. move b2 b3""");
+    }
 
     public void printBoardTurn(Board board, Team team) {
         printBoard(board);
@@ -37,18 +43,6 @@ public class OutputView {
         System.out.println(team.name() + " 턴입니다." + System.lineSeparator());
     }
 
-    public void printGameStart() {
-        System.out.println("""
-                > 체스 게임을 시작합니다.
-                > 게임 시작 : start
-                > 게임 종료 : end
-                > 게임 이동 : move source위치 target위치 - 예. move b2 b3""");
-    }
-
-    public void printErrorMessage(String errorMessage) {
-        System.out.printf("%s %s%n", ERROR_SUFFIX, errorMessage);
-    }
-
     public void printGameEnd() {
         System.out.println("게임이 종료되었습니다.");
     }
@@ -58,10 +52,10 @@ public class OutputView {
 
         double whiteScore = status.whiteScore();
         double blackScore = status.blackScore();
-        builder.append(String.format("%s 진영 점수: ", TEAM_WHITE))
+        builder.append(String.format("%s 진영 점수: ", Team.WHITE.name()))
                 .append(whiteScore)
                 .append(System.lineSeparator())
-                .append(String.format("%s 진영 점수: ", TEAM_BLACK))
+                .append(String.format("%s 진영 점수: ", Team.BLACK.name()))
                 .append(blackScore)
                 .append(System.lineSeparator());
 
@@ -69,10 +63,10 @@ public class OutputView {
             builder.append("동점 입니다.");
         }
         if (whiteScore > blackScore) {
-            builder.append(String.format("%s 진영이 이기고 있습니다.", TEAM_WHITE));
+            builder.append(String.format("%s 진영이 이기고 있습니다.", Team.WHITE.name()));
         }
         if (whiteScore < blackScore) {
-            builder.append(String.format("%s 진영이 이기고 있습니다.", TEAM_BLACK));
+            builder.append(String.format("%s 진영이 이기고 있습니다.", Team.BLACK.name()));
         }
 
         System.out.println(builder.append(System.lineSeparator()));
@@ -83,10 +77,10 @@ public class OutputView {
 
         builder.append(System.lineSeparator());
         if (Team.WHITE.equals(winner)) {
-            builder.append(String.format("%s 진영이 이겼습니다.", TEAM_WHITE));
+            builder.append(String.format("%s 진영이 이겼습니다.", Team.BLACK.name()));
         }
         if (Team.BLACK.equals(winner)) {
-            builder.append(String.format("%s 진영이 이겼습니다.", TEAM_BLACK));
+            builder.append(String.format("%s 진영이 이겼습니다.", Team.WHITE.name()));
         }
         if (Team.EMPTY.equals(winner)) {
             builder.append("아직 승자가 없습니다.");
@@ -95,5 +89,9 @@ public class OutputView {
         builder.append("게임을 종료합니다.");
 
         System.out.println(builder);
+    }
+
+    public void printErrorMessage(String errorMessage) {
+        System.out.printf("%s %s%n", ERROR_SUFFIX, errorMessage);
     }
 }
