@@ -5,11 +5,11 @@ import chess.domain.piece.Team;
 import java.util.HashMap;
 import java.util.Map;
 
-class PieceCharacters {
+public class PieceCharacters {
 
     private static final Map<Piece, Character> POOL;
 
-    static char characterFrom(Piece piece) {
+    public static char characterFrom(Piece piece) {
         Character c = POOL.get(piece);
         if (c == null) {
             throw new IllegalStateException("체스에 존재하지 않는 기물이 있습니다. 게임을 종료합니다.");

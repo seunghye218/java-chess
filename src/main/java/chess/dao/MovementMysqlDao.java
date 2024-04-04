@@ -14,8 +14,7 @@ public class MovementMysqlDao implements MovementDao {
 
         public void addMovement(MovementDto movementDto) {
             jdbcTemplate.update(
-                    "INSERT INTO movement(turn, source, target)VALUES(?, ?, ?)",
-                    movementDto.turn(),
+                    "INSERT INTO movement(source, target)VALUES(?, ?)",
                     movementDto.source(),
                     movementDto.target());
         }
@@ -25,7 +24,6 @@ public class MovementMysqlDao implements MovementDao {
             return jdbcTemplate.query(
                     "SELECT * FROM movement",
                     resultSet -> new MovementDto(
-                            resultSet.getString("turn"),
                             resultSet.getString("source"),
                             resultSet.getString("target")));
         }
