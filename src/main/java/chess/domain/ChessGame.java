@@ -6,8 +6,6 @@ import chess.domain.piece.Team;
 import chess.domain.player.Player;
 import chess.domain.point.Point;
 import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.Map;
 
 public class ChessGame {
 
@@ -42,11 +40,10 @@ public class ChessGame {
         this.turn = turn.opponent();
     }
 
-    public Map<Team, Double> playerScores() {
-        Map<Team, Double> scores = new HashMap<>();
-        scores.put(Team.WHITE, players.get(Team.WHITE).score());
-        scores.put(Team.BLACK, players.get(Team.BLACK).score());
-        return scores;
+    public Status playerStatus() {
+        return new Status(
+                players.get(Team.WHITE).score(),
+                players.get(Team.BLACK).score());
     }
 
     public boolean isGameOver() {

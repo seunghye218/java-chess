@@ -66,7 +66,7 @@ public class ChessController {
                     break;
                 }
                 if (CommandType.STATUS == commandType) {
-                    outputView.printStatus(game.playerScores());
+                    outputView.printStatus(game.playerStatus());
                 }
                 if (CommandType.MOVE == commandType) {
                     pieceMoveAndSave(command, game);

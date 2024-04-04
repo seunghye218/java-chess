@@ -12,9 +12,6 @@ import java.util.Map;
 
 public class BoardFactory {
 
-    private static final int FILE_INDEX = 0;
-    private static final int RANK_INDEX = 1;
-
     public static Board createChessBoard(List<MovementDto> movementDtos) {
         Board board = createInitialChessBoard();
 
@@ -23,10 +20,8 @@ public class BoardFactory {
         }
 
         for (MovementDto movementDto : movementDtos) {
-            Point source = Point.of(File.of(movementDto.source().charAt(FILE_INDEX)),
-                    Rank.of(Integer.parseInt(String.valueOf(movementDto.source().charAt(RANK_INDEX)))));
-            Point target = Point.of(File.of(movementDto.target().charAt(FILE_INDEX)),
-                    Rank.of(Integer.parseInt(String.valueOf(movementDto.target().charAt(RANK_INDEX)))));
+            Point source = Point.of(movementDto.source());
+            Point target = Point.of(movementDto.target());
             board.move(source, target);
         }
         return board;

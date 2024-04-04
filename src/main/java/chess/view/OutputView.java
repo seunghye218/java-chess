@@ -1,12 +1,12 @@
 package chess.view;
 
+import chess.domain.Status;
 import chess.domain.board.Board;
 import chess.domain.piece.Piece;
 import chess.domain.piece.Team;
 import chess.domain.point.File;
 import chess.domain.point.Point;
 import chess.domain.point.Rank;
-import java.util.Map;
 
 public class OutputView {
 
@@ -44,11 +44,11 @@ public class OutputView {
         System.out.println("게임이 종료되었습니다.");
     }
 
-    public void printStatus(Map<Team, Double> scores) {
+    public void printStatus(Status status) {
         StringBuilder builder = new StringBuilder();
 
-        double whiteScore = scores.get(Team.WHITE);
-        double blackScore = scores.get(Team.BLACK);
+        double whiteScore = status.whiteScore();
+        double blackScore = status.blackScore();
         builder.append(String.format("%s 진영 점수: ", TEAM_WHITE))
                 .append(whiteScore)
                 .append(System.lineSeparator())

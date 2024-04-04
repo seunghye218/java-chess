@@ -9,10 +9,6 @@ public enum Team {
         return this == WHITE;
     }
 
-    public int forwardDirection() {
-        return this.isWhite() ? 1 : -1;
-    }
-
     public Team opponent() {
         if (this == EMPTY) {
             return this;

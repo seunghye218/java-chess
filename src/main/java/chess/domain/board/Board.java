@@ -44,8 +44,7 @@ public class Board {
             return 0;
         }
         double totalScore = totalTeamScoreOfDefaultPawn(team);
-        totalScore -= sameColumnPawnsDeduction(team);
-        return totalScore;
+        return totalScore - sameColumnPawnsDeduction(team);
     }
 
     private boolean isKingDead(Team team) {
@@ -69,7 +68,9 @@ public class Board {
     }
 
     private double sameColumnPawnsDeduction(Team team) {
-        return Arrays.stream(File.values()).mapToInt(file -> countPawnIfSameColumnExistPawns(team, file)).sum()
+        return Arrays.stream(File.values())
+                .mapToInt(file -> countPawnIfSameColumnExistPawns(team, file))
+                .sum()
                 * SAME_COLUMN_PAWNS_DEDUCATION;
     }
 
