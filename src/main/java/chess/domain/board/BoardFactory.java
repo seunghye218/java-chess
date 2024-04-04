@@ -17,7 +17,7 @@ public class BoardFactory {
             return createInitialChessBoard();
         }
 
-        Map<Point, Piece> board = new HashMap<>();;
+        Map<Point, Piece> board = new HashMap<>();
         int boardIndex = 0;
         for (int rank = Rank.maxValue(); rank >= Rank.minValue(); rank--) {
             for (int file = File.minValue(); file <= File.maxValue(); file++) {
