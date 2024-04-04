@@ -25,7 +25,11 @@ public class OutputView {
             builder.append(System.lineSeparator());
         }
 
-        System.out.println(builder);
+        System.out.print(builder);
+    }
+
+    public void printCurrentTurnPlayer(Team team) {
+        System.out.println(team.name() + " 턴입니다.");
     }
 
     public void printGameStart() {

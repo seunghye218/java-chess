@@ -42,6 +42,21 @@ public class ChessController {
         return new ChessGame(board, turn);
     }
 
+    private Team getTurn(List<MovementDto> movementDtos) {
+        try {
+            if (movementDtos.isEmpty()) {
+                return Team.WHITE;
+            }
+
+            String lastTurn = movementDtos.get(movementDtos.size() - 1).turn();
+
+            return Team.valueOf(lastTurn).opponent();
+
+        } catch (NullPointerException | IndexOutOfBoundsException | IllegalArgumentException e) {
+            throw new IllegalStateException("게임을 불러오는 중 오류가 발생했습니다.");
+        }
+    }
+
     private void startGame() {
         outputView.printGameStart();
         while (true) {
@@ -58,6 +73,7 @@ public class ChessController {
         while (true) {
             try {
                 outputView.printBoard(game.getBoard());
+                outputView.printCurrentTurnPlayer(game.currentTurn());
 
                 final Command command = new Command(inputView.readCommand());
                 final CommandType commandType = command.getCommandType();
@@ -81,20 +97,6 @@ public class ChessController {
                 outputView.printErrorMessage(e.getMessage());
             }
         }
-    }
-
-    private Team getTurn(List<MovementDto> movementDtos) {
-        if (movementDtos.isEmpty()) {
-            return Team.WHITE;
-        }
-        String lastTurn = movementDtos.get(movementDtos.size() - 1).turn();
-        Team turn;
-        if ("white".equals(lastTurn)) {
-            turn = Team.BLACK;
-        } else {
-            turn = Team.WHITE;
-        }
-        return turn;
     }
 
     private void pieceMoveAndSave(final Command command, ChessGame game) {
