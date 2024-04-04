@@ -1,11 +1,10 @@
 package chess.view;
 
+import chess.domain.board.BoardIterator;
 import chess.domain.Status;
 import chess.domain.board.Board;
 import chess.domain.piece.Piece;
 import chess.domain.piece.Team;
-import chess.domain.point.File;
-import chess.domain.point.Point;
 import chess.domain.point.Rank;
 
 public class OutputView {
@@ -28,14 +27,15 @@ public class OutputView {
     private void printBoard(Board board) {
         StringBuilder builder = new StringBuilder();
 
-        for (int rank = Rank.maxValue(); rank >= Rank.minValue(); rank--) {
-            for (char file = File.minValue(); file <= File.maxValue(); file++) {
-                Piece piece = board.get(Point.of(File.of(file), Rank.of(rank)));
-                builder.append(PieceCharacters.characterFrom(piece));
-            }
-            builder.append(System.lineSeparator());
-        }
+        BoardIterator.loop((point) -> {
+            Piece piece = board.get(point);
+            builder.append(PieceCharacters.characterFrom(piece));
+        });
+        builder.append(System.lineSeparator());
 
+        for (int i = Rank.maxValue() ; i >= Rank.minValue() ; i--) {
+            builder.insert(8 * i, System.lineSeparator());
+        }
         System.out.print(builder);
     }
 

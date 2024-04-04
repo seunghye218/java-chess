@@ -16,16 +16,13 @@ public class BoardFactory {
         if (rawBoard.length() != 64) {
             return createInitialChessBoard();
         }
-
         Map<Point, Piece> board = new HashMap<>();
-        int boardIndex = 0;
-        for (int rank = Rank.maxValue(); rank >= Rank.minValue(); rank--) {
-            for (int file = File.minValue(); file <= File.maxValue(); file++) {
-                board.put(Point.of(File.of((char) file), Rank.of(rank)),
-                        PieceCharacters.pieceFrom(rawBoard.charAt(boardIndex)));
-                boardIndex++;
-            }
-        }
+
+        StringBuilder boardBuilder = new StringBuilder(rawBoard);
+        BoardIterator.loop((point) -> {
+            board.put(point, PieceCharacters.pieceFrom(boardBuilder.charAt(0)));
+            boardBuilder.deleteCharAt(0);
+        });
         return new Board(board);
     }
 
