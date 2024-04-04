@@ -44,7 +44,7 @@ public class Board {
             return 0;
         }
         double totalScore = totalTeamScoreOfDefaultPawn(team);
-        return totalScore - sameColumnPawnsDeduction(team);
+        return totalScore - sameFilePawnsDeduction(team);
     }
 
     private boolean isKingDead(Team team) {
@@ -57,34 +57,26 @@ public class Board {
     }
 
     private double totalTeamScoreOfDefaultPawn(Team team) {
-        double total = 0;
-
-        for (Piece piece : board.values()) {
-            if (piece.isSameTeam(team)) {
-                total += piece.score();
-            }
-        }
-        return total;
+        return board.values().stream()
+                .filter(piece -> piece.isSameTeam(team))
+                .mapToDouble(Piece::score)
+                .sum();
     }
 
-    private double sameColumnPawnsDeduction(Team team) {
+    private double sameFilePawnsDeduction(Team team) {
         return Arrays.stream(File.values())
-                .mapToInt(file -> countPawnIfSameColumnExistPawns(team, file))
-                .sum()
-                * SAME_COLUMN_PAWNS_DEDUCATION;
+                .mapToInt(file -> countPawn(team, file))
+                .filter(this::existSameFile)
+                .sum() * SAME_COLUMN_PAWNS_DEDUCATION;
     }
 
-    private int countPawnIfSameColumnExistPawns(Team team, File file) {
-        int count = 0;
-        for (Rank rank : Rank.values()) {
-            Piece piece = this.board.get(Point.of(file, rank));
-            if (Piece.pawnFrom(team).equals(piece)) {
-                count++;
-            }
-        }
-        if (count > 1) {
-            return count;
-        }
-        return 0;
+    private int countPawn(Team team, File file) {
+        return (int) Arrays.stream(Rank.values())
+                .filter(rank -> Piece.pawnFrom(team).equals(board.get(Point.of(file, rank))))
+                .count();
+    }
+
+    private boolean existSameFile(int pawnCount) {
+        return pawnCount > 1;
     }
 }

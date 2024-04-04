@@ -70,11 +70,9 @@ public class ChessController {
     }
 
     private void runGame(ChessGame game) {
+        outputView.printBoardTurn(game.getBoard(), game.currentTurn());
         while (true) {
             try {
-                outputView.printBoard(game.getBoard());
-                outputView.printCurrentTurnPlayer(game.currentTurn());
-
                 final Command command = new Command(inputView.readCommand());
                 final CommandType commandType = command.getCommandType();
                 if (CommandType.END == commandType) {
@@ -86,6 +84,7 @@ public class ChessController {
                 }
                 if (CommandType.MOVE == commandType) {
                     pieceMoveAndSave(command, game);
+                    outputView.printBoardTurn(game.getBoard(), game.currentTurn());
                 }
 
                 if (game.isGameOver()) {

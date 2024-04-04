@@ -14,7 +14,12 @@ public class OutputView {
     private static final String TEAM_WHITE = "White";
     private static final String TEAM_BLACK = "Black";
 
-    public void printBoard(Board board) {
+    public void printBoardTurn(Board board, Team team) {
+        printBoard(board);
+        printCurrentTurnPlayer(team);
+    }
+
+    private void printBoard(Board board) {
         StringBuilder builder = new StringBuilder();
 
         for (int rank = Rank.maxValue(); rank >= Rank.minValue(); rank--) {
@@ -28,8 +33,8 @@ public class OutputView {
         System.out.print(builder);
     }
 
-    public void printCurrentTurnPlayer(Team team) {
-        System.out.println(team.name() + " 턴입니다.");
+    private void printCurrentTurnPlayer(Team team) {
+        System.out.println(team.name() + " 턴입니다." + System.lineSeparator());
     }
 
     public void printGameStart() {
