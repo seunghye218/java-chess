@@ -1,6 +1,7 @@
 package chess.dao;
 
 import chess.database.JdbcTemplate;
+import java.util.List;
 
 public class TurnMysqlDao implements TurnDao {
 
@@ -18,5 +19,11 @@ public class TurnMysqlDao implements TurnDao {
     @Override
     public void deleteAll() {
         jdbcTemplate.update("DELETE FROM turn");
+    }
+
+    @Override
+    public List<String> findAll() {
+        return jdbcTemplate.query("SELECT * FROM turn",
+                resultSet -> resultSet.getString("team"));
     }
 }

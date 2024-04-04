@@ -5,26 +5,28 @@ import chess.domain.piece.Team;
 import chess.domain.point.File;
 import chess.domain.point.Point;
 import chess.domain.point.Rank;
-import chess.dto.MovementDto;
+import chess.view.PieceCharacters;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class BoardFactory {
 
-    public static Board createChessBoard(List<MovementDto> movementDtos) {
-        Board board = createInitialChessBoard();
 
-        if (movementDtos.isEmpty()) {
-            return board;
+    public static Board createChessBoard(String rawBoard) {
+        if (rawBoard.length() != 64) {
+            return createInitialChessBoard();
         }
 
-        for (MovementDto movementDto : movementDtos) {
-            Point source = Point.of(movementDto.source());
-            Point target = Point.of(movementDto.target());
-            board.move(source, target);
+        Map<Point, Piece> board = new HashMap<>();;
+        int boardIndex = 0;
+        for (int rank = Rank.maxValue(); rank >= Rank.minValue(); rank--) {
+            for (int file = File.minValue(); file <= File.maxValue(); file++) {
+                board.put(Point.of(File.of((char) file), Rank.of(rank)),
+                        PieceCharacters.pieceFrom(rawBoard.charAt(boardIndex)));
+                boardIndex++;
+            }
         }
-        return board;
+        return new Board(board);
     }
 
     public static Board createInitialChessBoard() {

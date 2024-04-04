@@ -5,7 +5,6 @@ import chess.domain.board.Board;
 import chess.domain.board.BoardFactory;
 import chess.domain.piece.Team;
 import chess.domain.point.Point;
-import chess.dto.MovementDto;
 import chess.service.GameService;
 import chess.view.InputView;
 import chess.view.OutputView;
@@ -13,7 +12,6 @@ import chess.view.command.Command;
 import chess.view.command.CommandType;
 import chess.view.command.MoveOption;
 import java.util.EnumMap;
-import java.util.List;
 
 public class ChessController {
 
@@ -47,23 +45,9 @@ public class ChessController {
     }
 
     private ChessGame loadGame() {
-        List<MovementDto> movementDtos = gameService.loadMovements();
-        Board board = BoardFactory.createChessBoard(movementDtos);
-        Team turn = getTurn(movementDtos);
+        Board board = BoardFactory.createChessBoard(gameService.loadChessBoard());
+        Team turn = Team.valueOf(gameService.loadTurn());
         return new ChessGame(board, turn);
-    }
-
-    private Team getTurn(List<MovementDto> movementDtos) {
-        try {
-            if (movementDtos.isEmpty()) {
-                return Team.WHITE;
-            }
-            String lastTurn = movementDtos.get(movementDtos.size() - 1).turn();
-            return Team.valueOf(lastTurn).opponent();
-
-        } catch (NullPointerException | IndexOutOfBoundsException | IllegalArgumentException e) {
-            throw new IllegalStateException("게임을 불러오는 중 오류가 발생했습니다.");
-        }
     }
 
     private void startGame() {
@@ -103,29 +87,28 @@ public class ChessController {
     }
 
     private void end(Command command, ChessGame game) {
+        gameService.saveChessBoard(game);
+        gameService.saveTurn(game.currentTurn());
         outputView.printGameEnd();
     }
 
     private void move(Command command, ChessGame game) {
-        pieceMoveAndSave(command, game);
+        pieceMove(command, game);
         outputView.printBoardTurn(game.getBoard(), game.currentTurn());
     }
 
-    private void pieceMoveAndSave(final Command command, ChessGame game) {
+    private void pieceMove(final Command command, ChessGame game) {
         MoveOption moveOption = new MoveOption(command.options());
         String source = moveOption.source();
         String target = moveOption.target();
 
         game.currentTurnPlayerMove(Point.of(source), Point.of(target));
-
-        gameService.saveMovement(game.currentTurn(), moveOption.source(), moveOption.target());
-
         game.turnOver();
     }
 
     private void gameOver(ChessGame game) {
         outputView.printWinner(game.getWinner());
-        gameService.deleteAllMovements();
+        gameService.deleteAll();
     }
 
     @FunctionalInterface

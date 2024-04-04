@@ -46,5 +46,4 @@ public class JdbcTemplate {
             statement.setString(i + 1, params[i]);
         }
     }
-
 }

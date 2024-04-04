@@ -1,7 +1,6 @@
 package chess.service;
 
 import chess.dao.ChessBoardDao;
-import chess.dao.MovementDao;
 import chess.dao.TurnDao;
 import chess.domain.ChessGame;
 import chess.domain.piece.Piece;
@@ -9,36 +8,25 @@ import chess.domain.piece.Team;
 import chess.domain.point.File;
 import chess.domain.point.Point;
 import chess.domain.point.Rank;
-import chess.dto.MovementDto;
 import chess.view.PieceCharacters;
 import java.util.List;
 import java.util.Map;
 
 public class GameService {
 
-    private final MovementDao movementDao;
+    private static final String INITIAL_TURN = "WHITE";
+    private static final String INITIAL_BOARD = "RNBQKBNRPPPPPPPP................................pppppppprnbqkbnr";
+
     private final ChessBoardDao chessBoardDao;
     private final TurnDao turnDao;
 
-    public GameService(MovementDao movementDao, ChessBoardDao chessBoardDao, TurnDao turnDao) {
-        this.movementDao = movementDao;
+    public GameService(ChessBoardDao chessBoardDao, TurnDao turnDao) {
         this.chessBoardDao = chessBoardDao;
         this.turnDao = turnDao;
     }
 
-    public void saveMovement(String source, String target) {
-        movementDao.addMovement(new MovementDto(source, target));
-    }
-
-    public List<MovementDto> loadMovements() {
-        return movementDao.findAll();
-    }
-
-    public void deleteAllMovements() {
-        movementDao.deleteAll();
-    }
-
     public void saveChessBoard(ChessGame game) {
+        chessBoardDao.deleteAll();
         Map<Point, Piece> board = game.getBoard().getBoard();
         StringBuilder rawBoard = new StringBuilder();
 
@@ -47,7 +35,7 @@ public class GameService {
             for (char file = File.minValue(); file <= File.maxValue(); file++) {
                 Piece piece = board.get(Point.of(File.of(file), Rank.of(rank)));
                 rawBoard.append(PieceCharacters.characterFrom(piece));
-            };
+            }
         }
 
         chessBoardDao.addChessBoard(rawBoard.toString());
@@ -56,5 +44,30 @@ public class GameService {
     public void saveTurn(Team team) {
         turnDao.deleteAll();
         turnDao.addTurn(team.name());
+    }
+
+    public String loadTurn() {
+        List<String> allTurn = turnDao.findAll();
+
+        if (allTurn.isEmpty()) {
+            return INITIAL_TURN;
+        }
+
+        return allTurn.get(0);
+    }
+
+    public String loadChessBoard() {
+        List<String> allBoard = chessBoardDao.findAll();
+
+        if (allBoard.isEmpty()) {
+            return INITIAL_BOARD;
+        }
+
+        return allBoard.get(0);
+    }
+
+    public void deleteAll() {
+        chessBoardDao.deleteAll();
+        turnDao.deleteAll();
     }
 }
