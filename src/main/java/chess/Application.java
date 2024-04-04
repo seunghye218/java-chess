@@ -1,7 +1,7 @@
 package chess;
 
 import chess.controller.ChessController;
-import chess.dao.MovementDao;
+import chess.dao.MovementMysqlDao;
 import chess.database.DBConnection;
 import chess.database.JdbcTemplate;
 import chess.service.GameService;
@@ -14,7 +14,7 @@ public class Application {
         InputView inputView = new InputView();
         OutputView outputView = new OutputView();
         JdbcTemplate jdbcTemplate = new JdbcTemplate(new DBConnection());
-        GameService gameService = new GameService(new MovementDao(jdbcTemplate));
+        GameService gameService = new GameService(new MovementMysqlDao(jdbcTemplate));
         ChessController controller = new ChessController(inputView, outputView, gameService);
 
         controller.run();
