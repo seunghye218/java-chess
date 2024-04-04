@@ -9,7 +9,11 @@ public record Command(CommandType commandType, List<String> options) {
         this(entry.getKey(), entry.getValue());
     }
 
-    public CommandType getCommandType() {
+    public CommandType type() {
         return commandType;
+    }
+
+    public boolean isEnd() {
+        return CommandType.END == commandType;
     }
 }

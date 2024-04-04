@@ -12,18 +12,29 @@ import chess.view.OutputView;
 import chess.view.command.Command;
 import chess.view.command.CommandType;
 import chess.view.command.MoveOption;
+import java.util.EnumMap;
 import java.util.List;
 
 public class ChessController {
 
     private final InputView inputView;
     private final OutputView outputView;
+    private final EnumMap<CommandType, CommandExecute> commandExecutor;
     private final GameService gameService;
 
     public ChessController(InputView inputView, OutputView outputView, GameService gameService) {
         this.inputView = inputView;
         this.outputView = outputView;
         this.gameService = gameService;
+        this.commandExecutor = createCommandExecutor();
+    }
+
+    private EnumMap<CommandType, CommandExecute> createCommandExecutor() {
+        EnumMap<CommandType, CommandExecute> commandExecutor = new EnumMap<>(CommandType.class);
+        commandExecutor.put(CommandType.MOVE, this::move);
+        commandExecutor.put(CommandType.STATUS, this::status);
+        commandExecutor.put(CommandType.END, this::end);
+        return commandExecutor;
     }
 
     public void run() {
@@ -47,9 +58,7 @@ public class ChessController {
             if (movementDtos.isEmpty()) {
                 return Team.WHITE;
             }
-
             String lastTurn = movementDtos.get(movementDtos.size() - 1).turn();
-
             return Team.valueOf(lastTurn).opponent();
 
         } catch (NullPointerException | IndexOutOfBoundsException | IllegalArgumentException e) {
@@ -71,31 +80,35 @@ public class ChessController {
 
     private void runGame(ChessGame game) {
         outputView.printBoardTurn(game.getBoard(), game.currentTurn());
-        while (true) {
-            try {
-                final Command command = new Command(inputView.readCommand());
-                final CommandType commandType = command.getCommandType();
-                if (CommandType.END == commandType) {
-                    outputView.printGameEnd();
-                    break;
-                }
-                if (CommandType.STATUS == commandType) {
-                    outputView.printStatus(game.playerStatus());
-                }
-                if (CommandType.MOVE == commandType) {
-                    pieceMoveAndSave(command, game);
-                    outputView.printBoardTurn(game.getBoard(), game.currentTurn());
-                }
 
-                if (game.isGameOver()) {
-                    outputView.printWinner(game.getWinner());
-                    gameService.deleteAllMovements();
-                    break;
+        while (!game.isGameOver()) {
+            try {
+                Command command = new Command(inputView.readCommand());
+                CommandExecute commandExecute = commandExecutor.get(command.type());
+
+                commandExecute.execute(command, game);
+
+                if (command.isEnd()) {
+                    return;
                 }
             } catch (IllegalArgumentException e) {
                 outputView.printErrorMessage(e.getMessage());
             }
         }
+        gameOver(game);
+    }
+
+    private void status(Command command, ChessGame game) {
+        outputView.printStatus(game.playerStatus());
+    }
+
+    private void end(Command command, ChessGame game) {
+        outputView.printGameEnd();
+    }
+
+    private void move(Command command, ChessGame game) {
+        pieceMoveAndSave(command, game);
+        outputView.printBoardTurn(game.getBoard(), game.currentTurn());
     }
 
     private void pieceMoveAndSave(final Command command, ChessGame game) {
@@ -108,5 +121,16 @@ public class ChessController {
         gameService.saveMovement(game.currentTurn(), moveOption.source(), moveOption.target());
 
         game.turnOver();
+    }
+
+    private void gameOver(ChessGame game) {
+        outputView.printWinner(game.getWinner());
+        gameService.deleteAllMovements();
+    }
+
+    @FunctionalInterface
+    interface CommandExecute {
+
+        void execute(Command command, ChessGame game);
     }
 }
