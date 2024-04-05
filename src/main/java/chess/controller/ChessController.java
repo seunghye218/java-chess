@@ -17,8 +17,8 @@ public class ChessController {
 
     private final InputView inputView;
     private final OutputView outputView;
-    private final EnumMap<CommandType, CommandExecute> commandExecutor;
     private final GameService gameService;
+    private final EnumMap<CommandType, CommandExecute> commandExecutor;
 
     public ChessController(InputView inputView, OutputView outputView, GameService gameService) {
         this.inputView = inputView;
@@ -37,10 +37,21 @@ public class ChessController {
 
     public void run() {
         try {
-            startGame();
-            runGame(loadGame());
+            Command command = startGame();
+            runGame(loadGame(), command);
         } catch (IllegalStateException e) {
             outputView.printErrorMessage(e.getMessage());
+        }
+    }
+
+    private Command startGame() {
+        outputView.printGameStart();
+        while (true) {
+            try {
+                return new Command(inputView.readStart());
+            } catch (IllegalArgumentException e) {
+                outputView.printErrorMessage(e.getMessage());
+            }
         }
     }
 
@@ -50,31 +61,14 @@ public class ChessController {
         return new ChessGame(board, turn);
     }
 
-    private void startGame() {
-        outputView.printGameStart();
-        while (true) {
-            try {
-                inputView.readStart();
-                return;
-            } catch (IllegalArgumentException e) {
-                outputView.printErrorMessage(e.getMessage());
-            }
-        }
-    }
-
-    private void runGame(ChessGame game) {
+    private void runGame(ChessGame game, Command command) {
         outputView.printBoardTurn(game.getBoard(), game.currentTurn());
-
-        while (!game.isGameOver()) {
+        while (!game.isGameOver() && !command.isEnd()) {
             try {
-                Command command = new Command(inputView.readCommand());
+                command = new Command(inputView.readCommand());
                 CommandExecute commandExecute = commandExecutor.get(command.type());
 
                 commandExecute.execute(command, game);
-
-                if (command.isEnd()) {
-                    return;
-                }
             } catch (IllegalArgumentException e) {
                 outputView.printErrorMessage(e.getMessage());
             }
@@ -103,12 +97,13 @@ public class ChessController {
         String target = moveOption.target();
 
         game.currentTurnPlayerMove(Point.of(source), Point.of(target));
-        game.turnOver();
     }
 
     private void gameOver(ChessGame game) {
-        outputView.printWinner(game.getWinner());
-        gameService.deleteAll();
+        if (game.isGameOver()) {
+            outputView.printWinner(game.getWinner());
+            gameService.deleteAll();
+        }
     }
 
     @FunctionalInterface

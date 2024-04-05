@@ -12,13 +12,14 @@ public class InputView {
     private static final Scanner SCANNER = new Scanner(System.in);
     private static final int COMMAND_INDEX = 0;
 
-    public void readStart() {
+    public Entry<CommandType, List<String>> readStart() {
         String[] commandAndOptions = SCANNER.nextLine().split(" ");
         CommandType commandType = CommandType.of(commandAndOptions[COMMAND_INDEX]);
 
         if (CommandType.START != commandType) {
             throw new IllegalArgumentException(String.format("게임 시작 시 %s 만 입력할 수 있습니다.", CommandType.START.getCommand()));
         }
+        return Map.entry(commandType, getOptions(commandAndOptions));
     }
 
     public Entry<CommandType, List<String>> readCommand() {

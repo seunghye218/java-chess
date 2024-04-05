@@ -3,30 +3,23 @@ package chess.domain;
 import chess.domain.board.Board;
 import chess.domain.piece.Piece;
 import chess.domain.piece.Team;
-import chess.domain.player.Player;
+import chess.domain.player.Players;
 import chess.domain.point.Point;
-import java.util.EnumMap;
 
 public class ChessGame {
 
     private final Board board;
-    private final EnumMap<Team, Player> players;
-    private Team turn;
+    private final Players players;
     private Team winner;
 
     public ChessGame(Board board, Team turn) {
-        this.players = new EnumMap<>(Team.class);
-        this.players.put(Team.WHITE, new Player(Team.WHITE, board));
-        this.players.put(Team.BLACK, new Player(Team.BLACK, board));
-
+        this.players = new Players(board, turn);
         this.board = board;
-        this.turn = turn;
         this.winner = Team.EMPTY;
     }
 
     public void currentTurnPlayerMove(Point departure, Point destination) {
-        Player player = this.players.get(turn);
-        Piece targetPiece = player.move(departure, destination);
+        Piece targetPiece = players.move(departure, destination);
 
         if (Piece.kingFrom(Team.WHITE).equals(targetPiece)) {
             winner = Team.WHITE;
@@ -34,16 +27,15 @@ public class ChessGame {
         if (Piece.kingFrom(Team.BLACK).equals(targetPiece)) {
             winner = Team.BLACK;
         }
-    }
 
-    public void turnOver() {
-        this.turn = turn.opponent();
+        players.turnOver();
     }
 
     public Status playerStatus() {
-        return new Status(
-                players.get(Team.WHITE).score(),
-                players.get(Team.BLACK).score());
+        double whiteScore = players.whiteScore();
+        double blackScore = players.blackScore();
+
+        return new Status(whiteScore, blackScore);
     }
 
     public boolean isGameOver() {
@@ -55,7 +47,7 @@ public class ChessGame {
     }
 
     public Team currentTurn() {
-        return turn;
+        return players.currentTurn();
     }
 
     public Board getBoard() {
