@@ -10,7 +10,6 @@ public class MoveOption {
     private final String source;
     private final String target;
 
-
     public MoveOption(List<String> options) {
         if (options.size() != 2) {
             throw new IllegalArgumentException("move 명령은 두 개의 위치를 입력해야 합니다.");
